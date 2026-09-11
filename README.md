@@ -1,6 +1,22 @@
 # KsDumper-11
 https://github.com/user-attachments/assets/7558d492-859a-429b-b51e-285cae623c91
 
+## Critical: Disable Memory Integrity and Vulnerable Driver Blocklist
+**KDU (Kernel Driver Utility) relies on loading vulnerable signed drivers to map the KsDumper kernel driver. Modern Windows security features block this behavior by default. You MUST disable the following for KsDumper-11 to work:**
+
+1. **Memory Integrity (HVCI)**  
+   - Open Windows Start Menu, type **Core Isolation**, and open it.  
+   - Toggle **Memory Integrity** to **Off**.  
+   - **Reboot your computer.**  
+   - *After the reboot*, you will then be able to disable the Microsoft Vulnerable Driver Blocklist (see step 2).
+
+2. **Microsoft Vulnerable Driver Blocklist**  
+   - After rebooting from step 1, open **Core Isolation** again.  
+   - Toggle **Microsoft Vulnerable Driver Blocklist** to **Off**.  
+   - (Alternative for Windows Pro/Enterprise: Use `gpedit.msc` → Computer Configuration → Administrative Templates → System → Device Guard → "Turn on Virtualization-Based Security" to Disabled, or specifically disable the driver blocklist policy.)
+
+**Without these changes, KDU will fail to load the vulnerable drivers (all providers will fail), and KsDumper-11 will not be able to start its kernel driver.**
+
 ## Whats new v1.3.5
 + Updated KDU to v1.5.0 from v1.4.4 - 10 new Providers! 
     + Provider Selector now displays the new KDU v1.5.0 provider metadata: Advisory, Image Size, File Hash (SHA1), Authenticode Hash (SHA1), Page Hash (SHA1), and Page Hash (SHA256)
@@ -68,22 +84,6 @@ You can join the official KsDumper 11 discord server where I will be managing on
 For those of you who find that ksDumper won't start on their system, please join the server and post your logs in the support channel. 
 Please keep in mind that until others volunteer to help in development of this tool, I am only one person with a finite amount of knowledge. 
 https://discord.gg/JqzWNdWBfG
-
-## Critical: Disable Memory Integrity and Vulnerable Driver Blocklist
-**KDU (Kernel Driver Utility) relies on loading vulnerable signed drivers to map the KsDumper kernel driver. Modern Windows security features block this behavior by default. You MUST disable the following for KsDumper-11 to work:**
-
-1. **Memory Integrity (HVCI)**  
-   - Open Windows Start Menu, type **Core Isolation**, and open it.  
-   - Toggle **Memory Integrity** to **Off**.  
-   - **Reboot your computer.**  
-   - *After the reboot*, you will then be able to disable the Microsoft Vulnerable Driver Blocklist (see step 2).
-
-2. **Microsoft Vulnerable Driver Blocklist**  
-   - After rebooting from step 1, open **Core Isolation** again.  
-   - Toggle **Microsoft Vulnerable Driver Blocklist** to **Off**.  
-   - (Alternative for Windows Pro/Enterprise: Use `gpedit.msc` → Computer Configuration → Administrative Templates → System → Device Guard → "Turn on Virtualization-Based Security" to Disabled, or specifically disable the driver blocklist policy.)
-
-**Without these changes, KDU will fail to load the vulnerable driver, and KsDumper-11 will not be able to start its kernel driver.**  
 
 ## Features
 - Selection of working kdu exploit providers.
