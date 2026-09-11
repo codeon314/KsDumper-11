@@ -2,7 +2,7 @@
 https://github.com/user-attachments/assets/7558d492-859a-429b-b51e-285cae623c91
 
 ## Whats new v1.3.5
-+ Updated KDU to v1.5.0
++ Updated KDU to v1.5.0 from v1.4.4 - 10 new Providers! 
     + Provider Selector now displays the new KDU v1.5.0 provider metadata: Advisory, Image Size, File Hash (SHA1), Authenticode Hash (SHA1), Page Hash (SHA1), and Page Hash (SHA256)
     + Improved KDU provider parsing to handle the v1.5.0 provider list format, including provider names that contain extra commas/CVE IDs
     + KDU self-extraction now compares embedded binary lengths against the on-disk files, forcing re-extraction when bundled KDU binaries are updated
