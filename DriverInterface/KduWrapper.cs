@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -150,8 +150,16 @@ namespace KsDumper11
             Process proc = Process.Start(inf);
             string str = proc.StandardOutput.ReadToEnd();
 
-            List<string> parts = new List<string>(str.Split(new string[] { "Provider #" }, StringSplitOptions.RemoveEmptyEntries));
+            // Split only on "Provider #" tokens that appear at the start of a line.
+            // A naive Split("Provider #") is fragile because the phrase can also appear
+            // inside a provider's description or capability text, causing a single
+            // provider to be chopped into multiple pieces (or vice versa).
+            List<string> parts = new List<string>(
+                System.Text.RegularExpressions.Regex.Split(str, @"(?:^|\r?\n)Provider\s*#"));
+            // Drop the banner text that precedes the first "Provider #" line.
             parts.RemoveAt(0);
+            // Remove any empty entries the regex split may have produced.
+            parts.RemoveAll(p => string.IsNullOrWhiteSpace(p));
 
             for (int i = 0; i < parts.Count; i++)
             {

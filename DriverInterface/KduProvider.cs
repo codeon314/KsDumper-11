@@ -68,15 +68,48 @@ namespace KsDumper11
         {
             string[] lines = prov.Split('\n');
 
-            // Line 0: e.g. " 0, ResourceId # 103" -> ProviderIndex
-            string id = lines[0].Split(',')[0].Trim();
-            ProviderIndex = int.Parse(id);
+            // Locate the provider header line, e.g. " 0, ResourceId # 103".
+            // We cannot assume it is lines[0]: when the raw KDU output is split on the
+            // literal "Provider #" token, trailing metadata (such as the previous
+            // provider's "Signer:" lines) can leak into the front of this block, and
+            // the header itself may be prefixed by whitespace only. Scanning for the
+            // "<digits>, ResourceId" pattern is robust against both cases.
+            int headerLineIndex = -1;
+            int parsedProviderIndex = -1;
 
-            // Line 1 (KDU 1.4.4): e.g. "CVE-2015-2291, DriverName \"NalDrv\", DeviceName \"Nal\""
-            // Line 1 (KDU 1.5.0): e.g. "Intel NAL driver, DriverName \"NalDrv\", DeviceName \"Nal\""
-            //                    or  "ASRock Polychrome RGB, multiple CVE ids, DriverName \"GLCKIo2\", DeviceName \"GLCKIo2\""
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string candidate = lines[i].Trim();
+                if (string.IsNullOrEmpty(candidate))
+                {
+                    continue;
+                }
+
+                Match headerMatch = Regex.Match(candidate, @"^(\d+)\s*,\s*ResourceId");
+                if (headerMatch.Success)
+                {
+                    headerLineIndex = i;
+                    parsedProviderIndex = int.Parse(headerMatch.Groups[1].Value);
+                    break;
+                }
+            }
+
+            if (headerLineIndex < 0 || headerLineIndex + 1 >= lines.Length)
+            {
+                // Malformed block - record it as unparsed rather than throwing.
+                ProviderIndex = -1;
+                ProviderName = "(Unparsed Provider)";
+                return;
+            }
+
+            ProviderIndex = parsedProviderIndex;
+
+            // The line immediately after the header carries the provider description:
+            //   KDU 1.4.4: "CVE-2015-2291, DriverName \"NalDrv\", DeviceName \"Nal\""
+            //   KDU 1.5.0: "Intel NAL driver, DriverName \"NalDrv\", DeviceName \"Nal\""
+            //              or  "ASRock Polychrome RGB, multiple CVE ids, DriverName \"GLCKIo2\", DeviceName \"GLCKIo2\""
             // Use regex so any extra commas inside the provider name do not break parsing.
-            string provLine = lines[1];
+            string provLine = lines[headerLineIndex + 1];
 
             Match driverMatch = Regex.Match(provLine, "DriverName\\s+\"([^\"]*)\"");
             Match deviceMatch = Regex.Match(provLine, "DeviceName\\s+\"([^\"]*)\"");
@@ -126,7 +159,7 @@ namespace KsDumper11
             List<string> extraInfoLines = new List<string>();
             bool inCapabilities = false;
 
-            for (int i = 2; i < lines.Length; i++)
+            for (int i = headerLineIndex + 2; i < lines.Length; i++)
             {
                 string line = lines[i].Trim();
 

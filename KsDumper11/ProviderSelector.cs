@@ -115,9 +115,45 @@ namespace KsDumper11
             {
                 bool res = (bool)e[0];
 
-                int idx = (int)e[1];
+                int providerIndex = (int)e[1];
 
-                ListViewItem item = providerList.Items[idx];
+                // Do NOT use the provider index as a positional ListView index.
+                // KDU can emit non-contiguous IDs, and a malformed provider block
+                // (which KduProvider now records with ProviderIndex = -1 instead of
+                // throwing) would otherwise cause providerList.Items[providerIndex]
+                // to throw ArgumentOutOfRangeException.
+                //
+                // Instead, locate the ListViewItem whose SubItems[0] equals the
+                // ProviderIndex we were given. SubItems[0] is populated from
+                // p.ProviderIndex in Wrapper_ProvidersLoaded, so this mapping is
+                // stable regardless of gaps or parse failures.
+                int idx = -1;
+                ListViewItem item = null;
+
+                for (int i = 0; i < providerList.Items.Count; i++)
+                {
+                    ListViewItem candidate = providerList.Items[i];
+
+                    if (candidate.SubItems.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    if (candidate.SubItems[0].Text == providerIndex.ToString())
+                    {
+                        idx = i;
+                        item = candidate;
+                        break;
+                    }
+                }
+
+                if (item == null)
+                {
+                    // No row corresponds to this provider index (e.g. the provider
+                    // block failed to parse and therefore was never added). Nothing
+                    // to update visually; bail out safely.
+                    return;
+                }
 
                 for (int i = 0; i < wrapper.providers.Count; i++)
                 {
