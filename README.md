@@ -1,5 +1,4 @@
 # KsDumper-11
-https://github.com/user-attachments/assets/7558d492-859a-429b-b51e-285cae623c91
 
 ## Critical: Disable Memory Integrity and Vulnerable Driver Blocklist
 **KDU (Kernel Driver Utility) relies on loading vulnerable signed drivers to map the KsDumper kernel driver. Modern Windows security features block this behavior by default. You MUST disable the following for KsDumper-11 to work:**
@@ -80,6 +79,7 @@ https://github.com/user-attachments/assets/7558d492-859a-429b-b51e-285cae623c91
 + Updated project version to 1.3.5
 
 ## Whats new v1.3.4
+https://github.com/user-attachments/assets/7558d492-859a-429b-b51e-285cae623c91
 + Added new feature Anti Anti Debugging Tools Detection
     + Randomized MainWindow Title, most Control Titles, and the exe file name during runtime
     + The process name is reverted to KsDumper11.exe upon program closing
