@@ -9,8 +9,51 @@ typedef struct _KAPC_STATE {
 } KAPC_STATE, * PKAPC_STATE, * PRKAPC_STATE;
 typedef enum _SYSTEM_INFORMATION_CLASS
 {
-	SystemProcessInformation = 5
+	SystemProcessInformation = 5,
+	SystemModuleInformation = 11
 } SYSTEM_INFORMATION_CLASS;
+// --------------------------------------------------------------------------------
+// RTL_PROCESS_MODULES (SystemModuleInformation) - exposes the result of walking
+// the kernel's PsLoadedModuleList.  Used by the module enumerator.
+// --------------------------------------------------------------------------------
+typedef struct _RTL_PROCESS_MODULE_INFORMATION
+{
+	HANDLE Section;
+	PVOID MappedBase;
+	PVOID ImageBase;
+	ULONG ImageSize;
+	ULONG Flags;
+	USHORT LoadOrderIndex;
+	USHORT InitOrderIndex;
+	USHORT LoadCount;
+	USHORT OffsetToFileName;
+	UCHAR FullPathName[256];
+} RTL_PROCESS_MODULE_INFORMATION, * PRTL_PROCESS_MODULE_INFORMATION;
+typedef struct _RTL_PROCESS_MODULES
+{
+	ULONG NumberOfModules;
+	RTL_PROCESS_MODULE_INFORMATION Modules[1];
+} RTL_PROCESS_MODULES, * PRTL_PROCESS_MODULES;
+// --------------------------------------------------------------------------------
+// MmCopyMemory - documented way to copy from a kernel virtual address.  This is
+// the safe primitive used by the driver dumper (it handles paging internally).
+// --------------------------------------------------------------------------------
+#ifndef MM_COPY_MEMORY_PHYSICAL
+#define MM_COPY_MEMORY_PHYSICAL 0x1
+#define MM_COPY_MEMORY_VIRTUAL  0x2
+typedef union _MM_COPY_ADDRESS
+{
+	PVOID VirtualAddress;
+	PHYSICAL_ADDRESS PhysicalAddress;
+} MM_COPY_ADDRESS, * PMM_COPY_ADDRESS;
+NTKERNELAPI NTSTATUS NTAPI MmCopyMemory(
+	PVOID TargetAddress,
+	MM_COPY_ADDRESS SourceAddress,
+	SIZE_T NumberOfBytes,
+	ULONG Flags,
+	PSIZE_T NumberOfBytesTransferred
+);
+#endif
 typedef enum _MEMORY_INFORMATION_CLASS
 {
 	MemoryBasicInformation,

@@ -1,4 +1,4 @@
-﻿namespace KsDumper11
+namespace KsDumper11
 {
     public partial class DumperForm : global::System.Windows.Forms.Form
     {
@@ -14,385 +14,302 @@
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DumperForm));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.logsTextBox = new System.Windows.Forms.RichTextBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.dumpMainModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewModulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.suspendProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resumeProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.killProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileDumpBtn = new System.Windows.Forms.Button();
-            this.titleLbl = new DarkControls.Controls.TransparentLabel();
-            this.closeBtn = new DarkControls.Controls.WindowsDefaultTitleBarButton();
-            this.refreshBtn = new System.Windows.Forms.Button();
-            this.autoRefreshCheckBox = new DarkControls.Controls.DarkCheckBox();
-            this.hideSystemProcessBtn = new System.Windows.Forms.Button();
-            this.closeDriverOnExitBox = new DarkControls.Controls.DarkCheckBox();
-            this.appIcon1 = new DarkControls.Controls.AppIcon();
-            this.processList = new KsDumper11.Utility.ProcessListView();
-            this.PIDHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.NameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.PathHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.BaseAddressHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.EntryPointHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ImageSizeHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ImageTypeHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.providerBtn = new DarkControls.Controls.DarkButton();
-            this.trigger1 = new KsDumper11.Trigger();
-            this.debuggerTrigger = new KsDumper11.Trigger();
-            this.antiantiDebuggerToolsBox = new DarkControls.Controls.DarkCheckBox();
-            this.groupBox1.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.appIcon1)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            groupBox1 = new System.Windows.Forms.GroupBox();
+            logsTextBox = new System.Windows.Forms.RichTextBox();
+            contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(components);
+            dumpMainModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            viewModulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            suspendProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            resumeProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            killProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            fileDumpBtn = new System.Windows.Forms.Button();
+            refreshBtn = new System.Windows.Forms.Button();
+            autoRefreshCheckBox = new System.Windows.Forms.CheckBox();
+            hideSystemProcessBtn = new System.Windows.Forms.Button();
+            closeDriverOnExitBox = new System.Windows.Forms.CheckBox();
+            processList = new KsDumper11.Utility.ProcessListView();
+            PIDHeader = new System.Windows.Forms.ColumnHeader();
+            NameHeader = new System.Windows.Forms.ColumnHeader();
+            PathHeader = new System.Windows.Forms.ColumnHeader();
+            BaseAddressHeader = new System.Windows.Forms.ColumnHeader();
+            EntryPointHeader = new System.Windows.Forms.ColumnHeader();
+            ImageSizeHeader = new System.Windows.Forms.ColumnHeader();
+            ImageTypeHeader = new System.Windows.Forms.ColumnHeader();
+            providerBtn = new System.Windows.Forms.Button();
+            kernelModulesBtn = new System.Windows.Forms.Button();
+            antiantiDebuggerToolsBox = new System.Windows.Forms.CheckBox();
+            FormFixTimer = new System.Windows.Forms.Timer(components);
+            groupBox1.SuspendLayout();
+            contextMenuStrip1.SuspendLayout();
+            SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.logsTextBox);
-            this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox1.Location = new System.Drawing.Point(12, 512);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(987, 222);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Logs";
+            groupBox1.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            groupBox1.Controls.Add(logsTextBox);
+            groupBox1.Location = new System.Drawing.Point(20, 858);
+            groupBox1.Margin = new System.Windows.Forms.Padding(5);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new System.Windows.Forms.Padding(5);
+            groupBox1.Size = new System.Drawing.Size(2235, 354);
+            groupBox1.TabIndex = 5;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Logs";
             // 
             // logsTextBox
             // 
-            this.logsTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.logsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.logsTextBox.ForeColor = System.Drawing.Color.Silver;
-            this.logsTextBox.Location = new System.Drawing.Point(12, 19);
-            this.logsTextBox.Name = "logsTextBox";
-            this.logsTextBox.ReadOnly = true;
-            this.logsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.logsTextBox.Size = new System.Drawing.Size(967, 197);
-            this.logsTextBox.TabIndex = 0;
-            this.logsTextBox.Text = "";
-            this.logsTextBox.TextChanged += new System.EventHandler(this.logsTextBox_TextChanged);
+            logsTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            logsTextBox.BackColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            logsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            logsTextBox.ForeColor = System.Drawing.Color.Silver;
+            logsTextBox.Location = new System.Drawing.Point(17, 34);
+            logsTextBox.Margin = new System.Windows.Forms.Padding(5);
+            logsTextBox.Name = "logsTextBox";
+            logsTextBox.ReadOnly = true;
+            logsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            logsTextBox.Size = new System.Drawing.Size(2202, 308);
+            logsTextBox.TabIndex = 0;
+            logsTextBox.Text = "";
+            logsTextBox.TextChanged += logsTextBox_TextChanged;
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.dumpMainModuleToolStripMenuItem,
-            this.viewModulesToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.openInExplorerToolStripMenuItem,
-            this.suspendProcessToolStripMenuItem,
-            this.resumeProcessToolStripMenuItem,
-            this.killProcessToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 164);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { dumpMainModuleToolStripMenuItem, viewModulesToolStripMenuItem, toolStripSeparator1, openInExplorerToolStripMenuItem, suspendProcessToolStripMenuItem, resumeProcessToolStripMenuItem, killProcessToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new System.Drawing.Size(220, 202);
+            contextMenuStrip1.Opening += contextMenuStrip1_Opening;
             // 
             // dumpMainModuleToolStripMenuItem
             // 
-            this.dumpMainModuleToolStripMenuItem.Name = "dumpMainModuleToolStripMenuItem";
-            this.dumpMainModuleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.dumpMainModuleToolStripMenuItem.Text = "Dump Process";
-            this.dumpMainModuleToolStripMenuItem.Click += new System.EventHandler(this.dumpMainModuleToolStripMenuItem_Click);
+            dumpMainModuleToolStripMenuItem.Name = "dumpMainModuleToolStripMenuItem";
+            dumpMainModuleToolStripMenuItem.Size = new System.Drawing.Size(219, 32);
+            dumpMainModuleToolStripMenuItem.Text = "Dump Process";
+            dumpMainModuleToolStripMenuItem.Click += dumpMainModuleToolStripMenuItem_Click;
             // 
             // viewModulesToolStripMenuItem
             // 
-            this.viewModulesToolStripMenuItem.Name = "viewModulesToolStripMenuItem";
-            this.viewModulesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.viewModulesToolStripMenuItem.Text = "View Modules";
-            this.viewModulesToolStripMenuItem.Click += new System.EventHandler(this.viewModulesToolStripMenuItem_Click);
+            viewModulesToolStripMenuItem.Name = "viewModulesToolStripMenuItem";
+            viewModulesToolStripMenuItem.Size = new System.Drawing.Size(219, 32);
+            viewModulesToolStripMenuItem.Text = "View Modules";
+            viewModulesToolStripMenuItem.Click += viewModulesToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(216, 6);
             // 
             // openInExplorerToolStripMenuItem
             // 
-            this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
-            this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.openInExplorerToolStripMenuItem.Text = "Open In Explorer";
-            this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
+            openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
+            openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(219, 32);
+            openInExplorerToolStripMenuItem.Text = "Open In Explorer";
+            openInExplorerToolStripMenuItem.Click += openInExplorerToolStripMenuItem_Click;
             // 
             // suspendProcessToolStripMenuItem
             // 
-            this.suspendProcessToolStripMenuItem.Name = "suspendProcessToolStripMenuItem";
-            this.suspendProcessToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.suspendProcessToolStripMenuItem.Text = "Suspend process";
-            this.suspendProcessToolStripMenuItem.Click += new System.EventHandler(this.suspendProcessToolStripMenuItem_Click);
+            suspendProcessToolStripMenuItem.Name = "suspendProcessToolStripMenuItem";
+            suspendProcessToolStripMenuItem.Size = new System.Drawing.Size(219, 32);
+            suspendProcessToolStripMenuItem.Text = "Suspend process";
+            suspendProcessToolStripMenuItem.Click += suspendProcessToolStripMenuItem_Click;
             // 
             // resumeProcessToolStripMenuItem
             // 
-            this.resumeProcessToolStripMenuItem.Name = "resumeProcessToolStripMenuItem";
-            this.resumeProcessToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.resumeProcessToolStripMenuItem.Text = "Resume process";
-            this.resumeProcessToolStripMenuItem.Click += new System.EventHandler(this.resumeProcessToolStripMenuItem_Click);
+            resumeProcessToolStripMenuItem.Name = "resumeProcessToolStripMenuItem";
+            resumeProcessToolStripMenuItem.Size = new System.Drawing.Size(219, 32);
+            resumeProcessToolStripMenuItem.Text = "Resume process";
+            resumeProcessToolStripMenuItem.Click += resumeProcessToolStripMenuItem_Click;
             // 
             // killProcessToolStripMenuItem
             // 
-            this.killProcessToolStripMenuItem.Name = "killProcessToolStripMenuItem";
-            this.killProcessToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.killProcessToolStripMenuItem.Text = "Kill process";
-            this.killProcessToolStripMenuItem.Click += new System.EventHandler(this.killProcessToolStripMenuItem_Click);
+            killProcessToolStripMenuItem.Name = "killProcessToolStripMenuItem";
+            killProcessToolStripMenuItem.Size = new System.Drawing.Size(219, 32);
+            killProcessToolStripMenuItem.Text = "Kill process";
+            killProcessToolStripMenuItem.Click += killProcessToolStripMenuItem_Click;
             // 
             // fileDumpBtn
             // 
-            this.fileDumpBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.fileDumpBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.fileDumpBtn.ForeColor = System.Drawing.Color.Silver;
-            this.fileDumpBtn.Location = new System.Drawing.Point(227, 49);
-            this.fileDumpBtn.Name = "fileDumpBtn";
-            this.fileDumpBtn.Size = new System.Drawing.Size(75, 23);
-            this.fileDumpBtn.TabIndex = 1;
-            this.fileDumpBtn.Text = "Dump File";
-            this.fileDumpBtn.UseVisualStyleBackColor = false;
-            this.fileDumpBtn.Click += new System.EventHandler(this.fileDumpBtn_Click);
-            // 
-            // titleLbl
-            // 
-            this.titleLbl.AutoSize = true;
-            this.titleLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.titleLbl.Location = new System.Drawing.Point(32, 7);
-            this.titleLbl.Name = "titleLbl";
-            this.titleLbl.Size = new System.Drawing.Size(106, 20);
-            this.titleLbl.TabIndex = 8;
-            this.titleLbl.Text = "KsDumper 11";
-            // 
-            // closeBtn
-            // 
-            this.closeBtn.ButtonType = DarkControls.Controls.WindowsDefaultTitleBarButton.Type.Close;
-            this.closeBtn.ClickColor = System.Drawing.Color.Red;
-            this.closeBtn.ClickIconColor = System.Drawing.Color.Black;
-            this.closeBtn.HoverColor = System.Drawing.Color.OrangeRed;
-            this.closeBtn.HoverIconColor = System.Drawing.Color.Black;
-            this.closeBtn.IconColor = System.Drawing.Color.Black;
-            this.closeBtn.IconLineThickness = 2;
-            this.closeBtn.Location = new System.Drawing.Point(969, 1);
-            this.closeBtn.Name = "closeBtn";
-            this.closeBtn.Size = new System.Drawing.Size(40, 40);
-            this.closeBtn.TabIndex = 7;
-            this.closeBtn.Text = "windowsDefaultTitleBarButton1";
-            this.closeBtn.UseVisualStyleBackColor = true;
+            fileDumpBtn.Location = new System.Drawing.Point(163, 18);
+            fileDumpBtn.Margin = new System.Windows.Forms.Padding(5);
+            fileDumpBtn.Name = "fileDumpBtn";
+            fileDumpBtn.Size = new System.Drawing.Size(150, 38);
+            fileDumpBtn.TabIndex = 1;
+            fileDumpBtn.Text = "Dump File";
+            fileDumpBtn.UseVisualStyleBackColor = true;
+            fileDumpBtn.Click += fileDumpBtn_Click;
             // 
             // refreshBtn
             // 
-            this.refreshBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.refreshBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.refreshBtn.ForeColor = System.Drawing.Color.Silver;
-            this.refreshBtn.Location = new System.Drawing.Point(12, 49);
-            this.refreshBtn.Name = "refreshBtn";
-            this.refreshBtn.Size = new System.Drawing.Size(75, 23);
-            this.refreshBtn.TabIndex = 10;
-            this.refreshBtn.Text = "Refresh";
-            this.refreshBtn.UseVisualStyleBackColor = false;
-            this.refreshBtn.Click += new System.EventHandler(this.refreshBtn_Click);
+            refreshBtn.Location = new System.Drawing.Point(20, 18);
+            refreshBtn.Margin = new System.Windows.Forms.Padding(5);
+            refreshBtn.Name = "refreshBtn";
+            refreshBtn.Size = new System.Drawing.Size(133, 38);
+            refreshBtn.TabIndex = 10;
+            refreshBtn.Text = "Refresh";
+            refreshBtn.UseVisualStyleBackColor = true;
+            refreshBtn.Click += refreshBtn_Click;
             // 
             // autoRefreshCheckBox
             // 
-            this.autoRefreshCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.autoRefreshCheckBox.BoxBorderColor = System.Drawing.Color.DarkSlateBlue;
-            this.autoRefreshCheckBox.BoxFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.autoRefreshCheckBox.CheckColor = System.Drawing.Color.CornflowerBlue;
-            this.autoRefreshCheckBox.FlatAppearance.BorderSize = 0;
-            this.autoRefreshCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.autoRefreshCheckBox.Location = new System.Drawing.Point(93, 49);
-            this.autoRefreshCheckBox.Name = "autoRefreshCheckBox";
-            this.autoRefreshCheckBox.Size = new System.Drawing.Size(98, 23);
-            this.autoRefreshCheckBox.TabIndex = 11;
-            this.autoRefreshCheckBox.Text = "Auto Refresh";
-            this.autoRefreshCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.autoRefreshCheckBox.UseVisualStyleBackColor = true;
-            this.autoRefreshCheckBox.CheckedChanged += new System.EventHandler(this.autoRefreshCheckBox_CheckedChanged);
+            autoRefreshCheckBox.AutoSize = true;
+            autoRefreshCheckBox.Location = new System.Drawing.Point(1212, 26);
+            autoRefreshCheckBox.Margin = new System.Windows.Forms.Padding(5);
+            autoRefreshCheckBox.Name = "autoRefreshCheckBox";
+            autoRefreshCheckBox.Size = new System.Drawing.Size(133, 24);
+            autoRefreshCheckBox.TabIndex = 11;
+            autoRefreshCheckBox.Text = "Auto Refresh";
+            autoRefreshCheckBox.UseVisualStyleBackColor = true;
+            autoRefreshCheckBox.CheckedChanged += autoRefreshCheckBox_CheckedChanged;
             // 
             // hideSystemProcessBtn
             // 
-            this.hideSystemProcessBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.hideSystemProcessBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.hideSystemProcessBtn.ForeColor = System.Drawing.Color.Silver;
-            this.hideSystemProcessBtn.Location = new System.Drawing.Point(750, 49);
-            this.hideSystemProcessBtn.Name = "hideSystemProcessBtn";
-            this.hideSystemProcessBtn.Size = new System.Drawing.Size(137, 23);
-            this.hideSystemProcessBtn.TabIndex = 12;
-            this.hideSystemProcessBtn.Text = "Show System Processes";
-            this.hideSystemProcessBtn.UseVisualStyleBackColor = false;
-            this.hideSystemProcessBtn.Click += new System.EventHandler(this.hideSystemProcessBtn_Click);
+            hideSystemProcessBtn.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            hideSystemProcessBtn.Location = new System.Drawing.Point(1759, 18);
+            hideSystemProcessBtn.Margin = new System.Windows.Forms.Padding(5);
+            hideSystemProcessBtn.Name = "hideSystemProcessBtn";
+            hideSystemProcessBtn.Size = new System.Drawing.Size(267, 38);
+            hideSystemProcessBtn.TabIndex = 12;
+            hideSystemProcessBtn.Text = "Show System Processes";
+            hideSystemProcessBtn.UseVisualStyleBackColor = true;
+            hideSystemProcessBtn.Click += hideSystemProcessBtn_Click;
             // 
             // closeDriverOnExitBox
             // 
-            this.closeDriverOnExitBox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.closeDriverOnExitBox.BoxBorderColor = System.Drawing.Color.DarkSlateBlue;
-            this.closeDriverOnExitBox.BoxFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.closeDriverOnExitBox.CheckColor = System.Drawing.Color.CornflowerBlue;
-            this.closeDriverOnExitBox.FlatAppearance.BorderSize = 0;
-            this.closeDriverOnExitBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.closeDriverOnExitBox.Location = new System.Drawing.Point(361, 48);
-            this.closeDriverOnExitBox.Name = "closeDriverOnExitBox";
-            this.closeDriverOnExitBox.Size = new System.Drawing.Size(133, 23);
-            this.closeDriverOnExitBox.TabIndex = 13;
-            this.closeDriverOnExitBox.Text = "Close Driver on Exit";
-            this.closeDriverOnExitBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.closeDriverOnExitBox.UseVisualStyleBackColor = true;
-            this.closeDriverOnExitBox.CheckedChanged += new System.EventHandler(this.closeDriverOnExitBox_CheckedChanged);
-            // 
-            // appIcon1
-            // 
-            this.appIcon1.AppIconImage = global::KsDumper11.Properties.Resources.icons8_crossed_axes_100;
-            this.appIcon1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.appIcon1.DragForm = this;
-            this.appIcon1.Image = ((System.Drawing.Image)(resources.GetObject("appIcon1.Image")));
-            this.appIcon1.Location = new System.Drawing.Point(5, 4);
-            this.appIcon1.Name = "appIcon1";
-            this.appIcon1.Scale = 3.5F;
-            this.appIcon1.Size = new System.Drawing.Size(28, 28);
-            this.appIcon1.TabIndex = 9;
-            this.appIcon1.TabStop = false;
+            closeDriverOnExitBox.AutoSize = true;
+            closeDriverOnExitBox.Location = new System.Drawing.Point(640, 26);
+            closeDriverOnExitBox.Margin = new System.Windows.Forms.Padding(5);
+            closeDriverOnExitBox.Name = "closeDriverOnExitBox";
+            closeDriverOnExitBox.Size = new System.Drawing.Size(185, 24);
+            closeDriverOnExitBox.TabIndex = 13;
+            closeDriverOnExitBox.Text = "Close Driver on Exit";
+            closeDriverOnExitBox.UseVisualStyleBackColor = true;
+            closeDriverOnExitBox.CheckedChanged += closeDriverOnExitBox_CheckedChanged;
             // 
             // processList
             // 
-            this.processList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.processList.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.processList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.PIDHeader,
-            this.NameHeader,
-            this.PathHeader,
-            this.BaseAddressHeader,
-            this.EntryPointHeader,
-            this.ImageSizeHeader,
-            this.ImageTypeHeader});
-            this.processList.ContextMenuStrip = this.contextMenuStrip1;
-            this.processList.ForeColor = System.Drawing.Color.Silver;
-            this.processList.FullRowSelect = true;
-            this.processList.HideSelection = false;
-            this.processList.Location = new System.Drawing.Point(12, 78);
-            this.processList.MultiSelect = false;
-            this.processList.Name = "processList";
-            this.processList.OwnerDraw = true;
-            this.processList.Size = new System.Drawing.Size(987, 428);
-            this.processList.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.processList.SystemProcessesHidden = true;
-            this.processList.TabIndex = 2;
-            this.processList.UseCompatibleStateImageBehavior = false;
-            this.processList.View = System.Windows.Forms.View.Details;
+            processList.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            processList.BackColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            processList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            processList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { PIDHeader, NameHeader, PathHeader, BaseAddressHeader, EntryPointHeader, ImageSizeHeader, ImageTypeHeader });
+            processList.ContextMenuStrip = contextMenuStrip1;
+            processList.ForeColor = System.Drawing.Color.Silver;
+            processList.FullRowSelect = true;
+            processList.Location = new System.Drawing.Point(20, 74);
+            processList.Margin = new System.Windows.Forms.Padding(5);
+            processList.MultiSelect = false;
+            processList.Name = "processList";
+            processList.OwnerDraw = true;
+            processList.Size = new System.Drawing.Size(2235, 769);
+            processList.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            processList.TabIndex = 2;
+            processList.UseCompatibleStateImageBehavior = false;
+            processList.View = System.Windows.Forms.View.Details;
             // 
             // PIDHeader
             // 
-            this.PIDHeader.Text = "PID";
-            this.PIDHeader.Width = 76;
+            PIDHeader.Text = "PID";
+            PIDHeader.Width = 40;
             // 
             // NameHeader
             // 
-            this.NameHeader.Text = "Name";
-            this.NameHeader.Width = 143;
+            NameHeader.Text = "Name";
+            NameHeader.Width = 59;
             // 
             // PathHeader
             // 
-            this.PathHeader.Text = "Path";
-            this.PathHeader.Width = 375;
+            PathHeader.Text = "Path";
+            PathHeader.Width = 47;
             // 
             // BaseAddressHeader
             // 
-            this.BaseAddressHeader.Text = "Base Address";
-            this.BaseAddressHeader.Width = 106;
+            BaseAddressHeader.Text = "Base Address";
+            BaseAddressHeader.Width = 118;
             // 
             // EntryPointHeader
             // 
-            this.EntryPointHeader.Text = "Entry Point";
-            this.EntryPointHeader.Width = 106;
+            EntryPointHeader.Text = "Entry Point";
+            EntryPointHeader.Width = 98;
             // 
             // ImageSizeHeader
             // 
-            this.ImageSizeHeader.Text = "Image Size";
-            this.ImageSizeHeader.Width = 88;
+            ImageSizeHeader.Text = "Image Size";
+            ImageSizeHeader.Width = 250;
             // 
             // ImageTypeHeader
             // 
-            this.ImageTypeHeader.Text = "Image Type";
-            this.ImageTypeHeader.Width = 76;
+            ImageTypeHeader.Text = "Image Type";
+            ImageTypeHeader.Width = 150;
             // 
             // providerBtn
             // 
-            this.providerBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.providerBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.providerBtn.ForeColor = System.Drawing.Color.Silver;
-            this.providerBtn.Location = new System.Drawing.Point(893, 49);
-            this.providerBtn.Name = "providerBtn";
-            this.providerBtn.Size = new System.Drawing.Size(106, 23);
-            this.providerBtn.TabIndex = 17;
-            this.providerBtn.Text = "Provider Selector";
-            this.providerBtn.UseVisualStyleBackColor = true;
-            this.providerBtn.Click += new System.EventHandler(this.providerBtn_Click);
+            providerBtn.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            providerBtn.Location = new System.Drawing.Point(2039, 18);
+            providerBtn.Margin = new System.Windows.Forms.Padding(5);
+            providerBtn.Name = "providerBtn";
+            providerBtn.Size = new System.Drawing.Size(217, 38);
+            providerBtn.TabIndex = 17;
+            providerBtn.Text = "Provider Selector";
+            providerBtn.UseVisualStyleBackColor = true;
+            providerBtn.Click += providerBtn_Click;
             // 
-            // trigger1
+            // kernelModulesBtn
             // 
-            this.trigger1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.trigger1.Location = new System.Drawing.Point(443, 28);
-            this.trigger1.Margin = new System.Windows.Forms.Padding(4);
-            this.trigger1.Name = "trigger1";
-            this.trigger1.Size = new System.Drawing.Size(35, 24);
-            this.trigger1.TabIndex = 16;
-            // 
-            // debuggerTrigger
-            // 
-            this.debuggerTrigger.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.debuggerTrigger.Location = new System.Drawing.Point(484, 28);
-            this.debuggerTrigger.Margin = new System.Windows.Forms.Padding(4);
-            this.debuggerTrigger.Name = "debuggerTrigger";
-            this.debuggerTrigger.Size = new System.Drawing.Size(15, 13);
-            this.debuggerTrigger.TabIndex = 15;
+            kernelModulesBtn.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            kernelModulesBtn.Location = new System.Drawing.Point(1592, 18);
+            kernelModulesBtn.Margin = new System.Windows.Forms.Padding(5);
+            kernelModulesBtn.Name = "kernelModulesBtn";
+            kernelModulesBtn.Size = new System.Drawing.Size(160, 38);
+            kernelModulesBtn.TabIndex = 19;
+            kernelModulesBtn.Text = "Kernel Drivers";
+            kernelModulesBtn.UseVisualStyleBackColor = true;
+            kernelModulesBtn.Click += kernelModulesBtn_Click;
             // 
             // antiantiDebuggerToolsBox
             // 
-            this.antiantiDebuggerToolsBox.Appearance = System.Windows.Forms.Appearance.Button;
-            this.antiantiDebuggerToolsBox.BoxBorderColor = System.Drawing.Color.DarkSlateBlue;
-            this.antiantiDebuggerToolsBox.BoxFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.antiantiDebuggerToolsBox.CheckColor = System.Drawing.Color.CornflowerBlue;
-            this.antiantiDebuggerToolsBox.FlatAppearance.BorderSize = 0;
-            this.antiantiDebuggerToolsBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.antiantiDebuggerToolsBox.Location = new System.Drawing.Point(500, 48);
-            this.antiantiDebuggerToolsBox.Name = "antiantiDebuggerToolsBox";
-            this.antiantiDebuggerToolsBox.Size = new System.Drawing.Size(244, 23);
-            this.antiantiDebuggerToolsBox.TabIndex = 18;
-            this.antiantiDebuggerToolsBox.Text = "Enable Anti Anti Debugger Tools Detection";
-            this.antiantiDebuggerToolsBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.antiantiDebuggerToolsBox.UseVisualStyleBackColor = true;
-            this.antiantiDebuggerToolsBox.CheckedChanged += new System.EventHandler(this.antiantiDebuggerToolsBox_CheckedChanged);
+            antiantiDebuggerToolsBox.AutoSize = true;
+            antiantiDebuggerToolsBox.Location = new System.Drawing.Point(835, 26);
+            antiantiDebuggerToolsBox.Margin = new System.Windows.Forms.Padding(5);
+            antiantiDebuggerToolsBox.Name = "antiantiDebuggerToolsBox";
+            antiantiDebuggerToolsBox.Size = new System.Drawing.Size(355, 24);
+            antiantiDebuggerToolsBox.TabIndex = 18;
+            antiantiDebuggerToolsBox.Text = "Enable Anti Anti Debugger Tools Detection";
+            antiantiDebuggerToolsBox.UseVisualStyleBackColor = true;
+            antiantiDebuggerToolsBox.CheckedChanged += antiantiDebuggerToolsBox_CheckedChanged;
+            // 
+            // FormFixTimer
+            // 
+            FormFixTimer.Interval = 125;
+            FormFixTimer.Tick += FormFixTimer_Tick;
             // 
             // DumperForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.ClientSize = new System.Drawing.Size(1009, 746);
-            this.Controls.Add(this.antiantiDebuggerToolsBox);
-            this.Controls.Add(this.providerBtn);
-            this.Controls.Add(this.trigger1);
-            this.Controls.Add(this.debuggerTrigger);
-            this.Controls.Add(this.closeDriverOnExitBox);
-            this.Controls.Add(this.hideSystemProcessBtn);
-            this.Controls.Add(this.autoRefreshCheckBox);
-            this.Controls.Add(this.refreshBtn);
-            this.Controls.Add(this.closeBtn);
-            this.Controls.Add(this.fileDumpBtn);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.processList);
-            this.Controls.Add(this.appIcon1);
-            this.Controls.Add(this.titleLbl);
-            this.DoubleBuffered = true;
-            this.ForeColor = System.Drawing.Color.Silver;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.Name = "DumperForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Actions";
-            this.Load += new System.EventHandler(this.Dumper_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.appIcon1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(2275, 1231);
+            Controls.Add(antiantiDebuggerToolsBox);
+            Controls.Add(kernelModulesBtn);
+            Controls.Add(providerBtn);
+            Controls.Add(closeDriverOnExitBox);
+            Controls.Add(hideSystemProcessBtn);
+            Controls.Add(autoRefreshCheckBox);
+            Controls.Add(refreshBtn);
+            Controls.Add(fileDumpBtn);
+            Controls.Add(groupBox1);
+            Controls.Add(processList);
+            DoubleBuffered = true;
+            Margin = new System.Windows.Forms.Padding(5);
+            MinimumSize = new System.Drawing.Size(1485, 893);
+            Name = "DumperForm";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "KsDumper 11";
+            Load += Dumper_Load;
+            groupBox1.ResumeLayout(false);
+            contextMenuStrip1.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -409,23 +326,20 @@
         private System.Windows.Forms.RichTextBox logsTextBox;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem dumpMainModuleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewModulesToolStripMenuItem; // NEW
+        private System.Windows.Forms.ToolStripMenuItem viewModulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem suspendProcessToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resumeProcessToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem killProcessToolStripMenuItem;
         private System.Windows.Forms.Button fileDumpBtn;
-        private DarkControls.Controls.WindowsDefaultTitleBarButton closeBtn;
-        private DarkControls.Controls.TransparentLabel titleLbl;
-        private DarkControls.Controls.AppIcon appIcon1;
         private System.Windows.Forms.Button refreshBtn;
-        private DarkControls.Controls.DarkCheckBox autoRefreshCheckBox;
+        private System.Windows.Forms.CheckBox autoRefreshCheckBox;
         private System.Windows.Forms.Button hideSystemProcessBtn;
-        private DarkControls.Controls.DarkCheckBox closeDriverOnExitBox;
-        private Trigger debuggerTrigger;
-        private Trigger trigger1;
-        private DarkControls.Controls.DarkButton providerBtn;
-        private DarkControls.Controls.DarkCheckBox antiantiDebuggerToolsBox;
+        private System.Windows.Forms.CheckBox closeDriverOnExitBox;
+        private System.Windows.Forms.Button providerBtn;
+        private System.Windows.Forms.Button kernelModulesBtn;
+        private System.Windows.Forms.CheckBox antiantiDebuggerToolsBox;
+        private System.Windows.Forms.Timer FormFixTimer;
     }
 }

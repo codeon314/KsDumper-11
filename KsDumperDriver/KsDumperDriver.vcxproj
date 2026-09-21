@@ -109,6 +109,7 @@
   <ItemGroup>
     <ClCompile Include="ProcessLister.c" />
     <ClCompile Include="Driver.c" />
+	<ClCompile Include="KernelModuleLister.c" />
     <ClCompile Include="Utility.c" />
   </ItemGroup>
   <ItemGroup>

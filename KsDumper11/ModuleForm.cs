@@ -1,4 +1,3 @@
-﻿using DarkControls;
 using KsDumper11.Driver;
 using KsDumper11.PE;
 using KsDumper11.Utility;
@@ -6,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -37,15 +37,21 @@ namespace KsDumper11
             _driver = driver;
             _dumper = dumper;
             _targetProcess = targetProcess;
-
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.Region = Region.FromHrgn(Utils.CreateRoundRectRgn(0, 0, Width, Height, 10, 10));
         }
 
         private void ModuleForm_Load(object sender, EventArgs e)
         {
-            titleLbl.Text = $"Modules for {_targetProcess.ProcessName} ({_targetProcess.ProcessId})";
+            this.Text = $"Modules for {_targetProcess.ProcessName} ({_targetProcess.ProcessId})";
             RefreshModules();
+
+            moduleFormFix.Start();
+        }
+
+        private void moduleFormFix_Tick(object sender, EventArgs e)
+        {
+            this.Size = new Size(this.Size.Width + 3, this.Size.Height);
+            this.Invalidate();
+            moduleFormFix.Stop();
         }
 
         private void RefreshModules()
@@ -72,10 +78,18 @@ namespace KsDumper11
                     item.SubItems.Add($"0x{mod.SizeOfImage:X}");
                     item.SubItems.Add(mod.FullPathName ?? "");
 
-                    // Tag the item with the raw module info for dumping
                     item.Tag = mod;
 
                     moduleList.Items.Add(item);
+                }
+
+                // Auto-size every column so header text and widest subitem are
+                // always fully visible (no ellipsis truncation anywhere).
+                // Width = -2 sizes each column to fit its header and longest
+                // subitem; re-applied on every refresh so widths stay fitted.
+                for (int i = 0; i < moduleList.Columns.Count; i++)
+                {
+                    moduleList.Columns[i].Width = -2;
                 }
             }
             catch (Exception ex)
@@ -101,50 +115,54 @@ namespace KsDumper11
             var item = moduleList.SelectedItems[0];
             var modInfo = (KsDumper11.Driver.Operations.KERNEL_MODULE_INFO)item.Tag;
 
-            // Create a temporary ProcessSummary to trick the ProcessDumper
-            // We need a public constructor in ProcessSummary for this!
             string fullPath = modInfo.FullPathName;
-            if (string.IsNullOrEmpty(fullPath)) fullPath = item.Text; // Fallback to name
+            if (string.IsNullOrEmpty(fullPath)) fullPath = item.Text;
 
-            // Note: EntryPoint isn't returned by GetProcessModules currently, so we pass 0.
-            // PE Headers usually contain it, so dumping might still work if we rely on PE parsing.
             ProcessSummary moduleSummary = new ProcessSummary(
                 _targetProcess.ProcessId,
                 modInfo.BaseAddress,
                 fullPath,
                 modInfo.SizeOfImage,
                 0,
-                _targetProcess.IsWOW64 // Assume module bitness matches process
+                _targetProcess.IsWOW64
             );
 
             Task.Run(() =>
             {
-                Logger.Log($"Dumping module {item.Text}...");
-                PEFile peFile;
-                if (_dumper.DumpProcess(moduleSummary, out peFile))
+                try
                 {
-                    this.Invoke(new Action(() =>
+                    Logger.Log($"Dumping module {item.Text}...");
+                    PEFile peFile;
+                    if (_dumper.DumpProcess(moduleSummary, out peFile))
                     {
-                        using (SaveFileDialog sfd = new SaveFileDialog())
+                        this.Invoke(new Action(() =>
                         {
-                            sfd.FileName = Path.GetFileNameWithoutExtension(item.Text) + "_dump.dll";
-                            sfd.Filter = "DLL File (*.dll)|*.dll|Executable File (*.exe)|*.exe|All Files (*.*)|*.*";
-                            if (sfd.ShowDialog() == DialogResult.OK)
+                            using (SaveFileDialog sfd = new SaveFileDialog())
                             {
-                                peFile.SaveToDisk(sfd.FileName);
-                                Logger.Log($"Module saved to {sfd.FileName}");
-                                MessageBox.Show("Module Dumped Successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                sfd.FileName = Path.GetFileNameWithoutExtension(item.Text) + "_dump.dll";
+                                sfd.Filter = "DLL File (*.dll)|*.dll|Executable File (*.exe)|*.exe|All Files (*.*)|*.*";
+                                if (sfd.ShowDialog() == DialogResult.OK)
+                                {
+                                    peFile.SaveToDisk(sfd.FileName);
+                                    Logger.Log($"Module saved to {sfd.FileName}");
+                                    MessageBox.Show("Module Dumped Successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                }
                             }
-                        }
-                    }));
-                }
-                else
-                {
-                    this.Invoke(new Action(() =>
+                        }));
+                    }
+                    else
                     {
-                        MessageBox.Show("Failed to dump module!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }));
+                        this.Invoke(new Action(() =>
+                        {
+                            MessageBox.Show("Failed to dump module!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }));
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Debugger.Break();
+                }
+
             });
         }
 
@@ -154,13 +172,6 @@ namespace KsDumper11
             {
                 Clipboard.SetText(moduleList.SelectedItems[0].SubItems[1].Text);
             }
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-            if (m.Msg == Utils.WM_NCHITTEST)
-                m.Result = (IntPtr)Utils.HT_CAPTION;
         }
     }
 }

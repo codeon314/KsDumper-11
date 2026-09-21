@@ -1,6 +1,6 @@
 namespace KsDumper11
 {
-    public partial class ModuleForm : global::System.Windows.Forms.Form
+    public partial class KernelModulesForm : global::System.Windows.Forms.Form
     {
         protected override void Dispose(bool disposing)
         {
@@ -21,10 +21,10 @@ namespace KsDumper11
             SizeHeader = new System.Windows.Forms.ColumnHeader();
             PathHeader = new System.Windows.Forms.ColumnHeader();
             contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(components);
-            dumpModuleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            dumpDriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             copyAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             refreshBtn = new System.Windows.Forms.Button();
-            moduleFormFix = new System.Windows.Forms.Timer(components);
+            kdFormFix = new System.Windows.Forms.Timer(components);
             contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -46,8 +46,8 @@ namespace KsDumper11
             // 
             // NameHeader
             // 
-            NameHeader.Text = "Module";
-            NameHeader.Width = 73;
+            NameHeader.Text = "Driver";
+            NameHeader.Width = 59;
             // 
             // BaseHeader
             // 
@@ -62,27 +62,27 @@ namespace KsDumper11
             // PathHeader
             // 
             PathHeader.Text = "Path";
-            PathHeader.Width = 1016;
+            PathHeader.Width = 1030;
             // 
             // contextMenuStrip1
             // 
             contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { dumpModuleToolStripMenuItem, copyAddressToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { dumpDriverToolStripMenuItem, copyAddressToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new System.Drawing.Size(201, 68);
+            contextMenuStrip1.Size = new System.Drawing.Size(238, 68);
             // 
-            // dumpModuleToolStripMenuItem
+            // dumpDriverToolStripMenuItem
             // 
-            dumpModuleToolStripMenuItem.Name = "dumpModuleToolStripMenuItem";
-            dumpModuleToolStripMenuItem.Size = new System.Drawing.Size(200, 32);
-            dumpModuleToolStripMenuItem.Text = "Dump Module";
-            dumpModuleToolStripMenuItem.Click += dumpModuleToolStripMenuItem_Click;
+            dumpDriverToolStripMenuItem.Name = "dumpDriverToolStripMenuItem";
+            dumpDriverToolStripMenuItem.Size = new System.Drawing.Size(237, 32);
+            dumpDriverToolStripMenuItem.Text = "Dump Driver Code";
+            dumpDriverToolStripMenuItem.Click += dumpDriverToolStripMenuItem_Click;
             // 
             // copyAddressToolStripMenuItem
             // 
             copyAddressToolStripMenuItem.Name = "copyAddressToolStripMenuItem";
-            copyAddressToolStripMenuItem.Size = new System.Drawing.Size(200, 32);
-            copyAddressToolStripMenuItem.Text = "Copy Address";
+            copyAddressToolStripMenuItem.Size = new System.Drawing.Size(237, 32);
+            copyAddressToolStripMenuItem.Text = "Copy Base Address";
             copyAddressToolStripMenuItem.Click += copyAddressToolStripMenuItem_Click;
             // 
             // refreshBtn
@@ -97,12 +97,12 @@ namespace KsDumper11
             refreshBtn.UseVisualStyleBackColor = true;
             refreshBtn.Click += refreshBtn_Click;
             // 
-            // moduleFormFix
+            // kdFormFix
             // 
-            moduleFormFix.Interval = 125;
-            moduleFormFix.Tick += moduleFormFix_Tick;
+            kdFormFix.Interval = 125;
+            kdFormFix.Tick += kdFormFix_Tick;
             // 
-            // ModuleForm
+            // KernelModulesForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -111,13 +111,12 @@ namespace KsDumper11
             Controls.Add(moduleList);
             Margin = new System.Windows.Forms.Padding(5);
             MinimumSize = new System.Drawing.Size(985, 585);
-            Name = "ModuleForm";
+            Name = "KernelModulesForm";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            Text = "KsDumper 11 - Process Modules";
-            Load += ModuleForm_Load;
+            Text = "KsDumper 11 - Kernel Drivers";
+            Load += KernelModulesForm_Load;
             contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
-
         }
 
         private System.ComponentModel.IContainer components = null;
@@ -127,9 +126,9 @@ namespace KsDumper11
         private System.Windows.Forms.ColumnHeader SizeHeader;
         private System.Windows.Forms.ColumnHeader PathHeader;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem dumpModuleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dumpDriverToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyAddressToolStripMenuItem;
         private System.Windows.Forms.Button refreshBtn;
-        private System.Windows.Forms.Timer moduleFormFix;
+        private System.Windows.Forms.Timer kdFormFix;
     }
 }

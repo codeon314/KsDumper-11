@@ -74,10 +74,10 @@ namespace KsDumper11
             // Compare on-disk file length against the embedded resource length so that
             // updating the embedded binaries (e.g. KDU 1.4.4 -> 1.5.0) forces a re-extract
             // instead of silently reusing the stale copies already on disk.
-            if (!FileMatchesResource(driverPath, DriverInterface.Properties.Resources.KsDumperDriver)) return false;
-            if (!FileMatchesResource(kduPath, DriverInterface.Properties.Resources.kdu)) return false;
-            if (!FileMatchesResource(drv64Path, DriverInterface.Properties.Resources.drv64)) return false;
-            if (!FileMatchesResource(taigei64Path, DriverInterface.Properties.Resources.Taigei64)) return false;
+            if (!FileMatchesResource(driverPath, DriverInterface_NET10.Properties.Resources.KsDumperDriver)) return false;
+            if (!FileMatchesResource(kduPath, DriverInterface_NET10.Properties.Resources.kdu)) return false;
+            if (!FileMatchesResource(drv64Path, DriverInterface_NET10.Properties.Resources.drv64)) return false;
+            if (!FileMatchesResource(taigei64Path, DriverInterface_NET10.Properties.Resources.Taigei64)) return false;
 
             return true;
         }
@@ -133,10 +133,10 @@ namespace KsDumper11
                 // Overwrite unconditionally now. Extracted() already gated this
                 // branch on the on-disk size differing from the embedded resource,
                 // so reaching here means we genuinely need to refresh the files.
-                WriteResourceIfNotNull(driverPath, DriverInterface.Properties.Resources.KsDumperDriver);
-                WriteResourceIfNotNull(kduPath, DriverInterface.Properties.Resources.kdu);
-                WriteResourceIfNotNull(drv64Path, DriverInterface.Properties.Resources.drv64);
-                WriteResourceIfNotNull(taigei64Path, DriverInterface.Properties.Resources.Taigei64);
+                WriteResourceIfNotNull(driverPath, DriverInterface_NET10.Properties.Resources.KsDumperDriver);
+                WriteResourceIfNotNull(kduPath, DriverInterface_NET10.Properties.Resources.kdu);
+                WriteResourceIfNotNull(drv64Path, DriverInterface_NET10.Properties.Resources.drv64);
+                WriteResourceIfNotNull(taigei64Path, DriverInterface_NET10.Properties.Resources.Taigei64);
             }
         }
     }

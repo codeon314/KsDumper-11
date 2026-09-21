@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -7,12 +7,10 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DarkControls;
 using KsDumper11.Driver;
 using KsDumper11.PE;
 using KsDumper11.Utility;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace KsDumper11
 {
@@ -23,7 +21,7 @@ namespace KsDumper11
             get
             {
                 CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 33554432;
+                cp.ExStyle |= 33554432; // WS_EX_COMPOSITED
                 return cp;
             }
         }
@@ -53,67 +51,6 @@ namespace KsDumper11
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle(IntPtr hObject);
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private struct TOKEN_PRIVILEGES
-        {
-            public int PrivilegeCount;
-
-            public long Luid;
-
-            public int Attributes;
-        }
-
-        public struct SYSTEM_INFO
-        {
-            public uint dwOemId;
-            public uint dwPageSize;
-            public uint lpMinimumApplicationAddress;
-            public uint lpMaximumApplicationAddress;
-            public uint dwActiveProcessorMask;
-            public uint dwNumberOfProcessors;
-            public uint dwProcessorType;
-            public uint dwAllocationGranularity;
-            public uint dwProcessorLevel;
-            public uint dwProcessorRevision;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        private struct PROCESSENTRY32
-        {
-            private const int MAX_PATH = 260;
-            internal uint dwSize;
-            internal uint cntUsage;
-            internal uint th32ProcessID;
-            internal IntPtr th32DefaultHeapID;
-            internal uint th32ModuleID;
-            internal uint cntThreads;
-            internal uint th32ParentProcessID;
-            internal int pcPriClassBase;
-            internal uint dwFlags;
-
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
-            internal string szExeFile;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private struct PROCESS_BASIC_INFORMATION
-        {
-            public int Size
-            {
-                get
-                {
-                    return 24;
-                }
-            }
-
-            public int ExitStatus;
-            public int PebBaseAddress;
-            public int AffinityMask;
-            public int BasePriority;
-            public int UniqueProcessId;
-            public int InheritedFromUniqueProcessId;
-        }
-
         private readonly KsDumperDriverInterface driver;
         private readonly ProcessDumper dumper;
         private System.Windows.Forms.Timer t;
@@ -121,11 +58,7 @@ namespace KsDumper11
         bool skip_closeDriverOnExitBox_CheckedChanged_Event = false;
         bool skip_antiantiDebuggerToolsBox_CheckedChanged_Event = false;
 
-        List<LabelInfo> labelInfos = new List<LabelInfo>();
-
         JsonSettingsManager settingsManager;
-
-        LabelDrawer labelDrawer;
 
         public DumperForm()
         {
@@ -136,21 +69,12 @@ namespace KsDumper11
             skip_closeDriverOnExitBox_CheckedChanged_Event = true;
             closeDriverOnExitBox.Checked = settingsManager.JsonSettings.closeDriverOnExit;
 
-            skip_closeDriverOnExitBox_CheckedChanged_Event = true;
+            skip_antiantiDebuggerToolsBox_CheckedChanged_Event = true;
             antiantiDebuggerToolsBox.Checked = settingsManager.JsonSettings.enableAntiAntiDebuggerTools;
 
             this.FormClosing += Dumper_FormClosing;
             this.Disposed += Dumper_Disposed;
-            this.appIcon1.DragForm = this;
-            base.FormBorderStyle = FormBorderStyle.None;
-            base.Region = Region.FromHrgn(Utils.CreateRoundRectRgn(0, 0, base.Width, base.Height, 10, 10));
-            this.closeBtn.Region = Region.FromHrgn(Utils.CreateRoundRectRgn(0, 0, this.closeBtn.Width, this.closeBtn.Height, 10, 10));
-            this.groupBox1.ForeColor = Color.Silver;
-            foreach (object obj in this.groupBox1.Controls)
-            {
-                Control c = (Control)obj;
-                c.ForeColor = this.groupBox1.ForeColor;
-            }
+
             this.processList.HeaderStyle = ColumnHeaderStyle.Clickable;
             this.processList.ColumnWidthChanging += this.processList_ColumnWidthChanging;
             this.driver = new KsDumperDriverInterface("\\\\.\\KsDumper");
@@ -163,22 +87,24 @@ namespace KsDumper11
         {
             if (antiantiDebuggerToolsBox.Checked)
             {
-                labelDrawer = new LabelDrawer(this);
-
                 SnifferBypass.SelfTitle(this.Handle);
-
-                foreach (Control ctrl in this.Controls)
-                {
-                    if (ctrl == groupBox1) continue;
-
-                    SnifferBypass.SelfTitle(ctrl.Handle);
-                }
-
                 this.Text = SnifferBypass.GenerateRandomString(this.Text.Length);
             }
 
             Logger.OnLog += this.Logger_OnLog;
             Logger.Log("KsDumper 11 - [By EquiFox] Given Newlife", Array.Empty<object>());
+
+
+            FormFixTimer.Start();
+        }
+
+        private void FormFixTimer_Tick(object sender, EventArgs e)
+        {
+            this.Size = new Size(this.Size.Width + 3, this.Size.Height);
+
+            this.Invalidate();
+
+            FormFixTimer.Stop();
         }
 
         private void Dumper_Disposed(object sender, EventArgs e)
@@ -221,24 +147,11 @@ namespace KsDumper11
             }
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-            bool flag = m.Msg == Utils.WM_NCHITTEST;
-            if (flag)
-            {
-                m.Result = (IntPtr)Utils.HT_CAPTION;
-            }
-        }
-
         private void processList_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
         {
-            Console.Write("Column Resizing");
             e.NewWidth = this.processList.Columns[e.ColumnIndex].Width;
             e.Cancel = true;
         }
-
-
 
         private void LoadProcessList()
         {
@@ -373,7 +286,7 @@ namespace KsDumper11
         {
             ProcessSummary targetProcess = this.processList.SelectedItems[0].Tag as ProcessSummary;
             var modForm = new ModuleForm(this.driver, this.dumper, targetProcess);
-            modForm.Show();
+            modForm.ShowDialog();
         }
 
         private void Logger_OnLog(string message)
@@ -598,6 +511,19 @@ namespace KsDumper11
             prov.ShowDialog();
 
             StartDriver.Start();
+        }
+
+        private void kernelModulesBtn_Click(object sender, EventArgs e)
+        {
+            if (!this.driver.HasValidHandle())
+            {
+                MessageBox.Show("Unable to communicate with driver ! Make sure it is loaded.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                return;
+            }
+
+            KernelModulesForm kmf = new KernelModulesForm();
+            kmf.ShowDialog();
         }
     }
 }

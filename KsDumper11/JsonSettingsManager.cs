@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 
 namespace KsDumper11
 {
@@ -25,13 +24,11 @@ namespace KsDumper11
         {
             if (File.Exists(settingsFilePath))
             {
-                // Load settings json
                 string settingsJsonText = File.ReadAllText(settingsFilePath);
                 JsonSettings = JsonConvert.DeserializeObject<JsonSettings>(settingsJsonText);
             }
             else
             {
-                // Populate and save default settings json
                 JsonSettings = new JsonSettings();
                 JsonSettings.enableAntiAntiDebuggerTools = false;
                 JsonSettings.closeDriverOnExit = false;

@@ -1,4 +1,4 @@
-﻿using KsDumper11.Driver;
+using KsDumper11.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;

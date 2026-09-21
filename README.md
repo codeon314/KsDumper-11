@@ -17,21 +17,55 @@ https://github.com/user-attachments/assets/7558d492-859a-429b-b51e-285cae623c91
 
 **Without these changes, KDU will fail to load the vulnerable drivers (all providers will fail), and KsDumper-11 will not be able to start its kernel driver.**
 
+## Whats new v1.4.0
++ Migrated the entire user-mode stack to .NET 10
+    + User-mode application and driver interface now target `net10.0-windows` / .NET 10 (`KsDumper11`, `DriverInterface`)
+    + The legacy DarkControls library and the Panel-based custom title bar were dropped in favor of native Windows Forms dark mode (`Application.SetColorMode(SystemColorMode.Dark)`), `ApplicationConfiguration.Initialize()`, and PerMonitorV2 high-DPI (`Application.SetHighDpiMode(HighDpiMode.PerMonitorV2)`)
+    + Application Settings were removed; all user settings are now stored in `Settings.json` via `JsonSettingsManager`
++ Added kernel driver enumeration and dumping
+    + New "Kernel Drivers" button on the main window opens the new `KernelModulesForm`
+    + Loaded kernel modules are listed with name, base address, size, and full path
+    + "Dump Driver Code" writes two files from a *single* kernel snapshot:
+        + `.bin` — the full runtime image, byte-for-byte (all sections, as-is in kernel memory)
+        + `.sys` — a compacted, code-only PE produced by walking the in-memory image's PE headers and rewriting the section table so that only sections flagged `IMAGE_SCN_MEM_EXECUTE` remain
+    + "Copy Base Address" context menu option for the selected driver
+    + New user-mode bridge class `KernelDriverOperations` opens its own handle to `\\.\KsDumper` and exposes `GetKernelModules()` and `DumpKernelModule()`
++ Added kernel driver support for kernel-module dumping
+    + New IOCTL `IO_GET_KERNEL_DRIVERS` (0x1728) — enumerates loaded kernel modules via `ZwQuerySystemInformation(SystemModuleInformation)`
+    + New IOCTL `IO_DUMP_KERNEL_MODULE` (0x1729) — copies a kernel image from a kernel VA into a caller-supplied user buffer
+    + New driver source files `KernelModuleLister.c` / `KernelModuleLister.h`
+    + `DumpKernelDriver` performs `ProbeForWrite` on the user buffer up-front, stages the copy through a NonPagedPool buffer with `MmCopyMemory(MM_COPY_MEMORY_VIRTUAL)`, and then `RtlCopyMemory`s the staged bytes into the user buffer inside a `__try`/`__except`. Partial reads are normalized to `STATUS_SUCCESS` so truncated snapshots are still usable
+    + A 64 MB upper bound on requested image size prevents pathological allocations
++ Updated KDU to v1.5.0 (from v1.4.4)
+    + 10 new providers added by upstream KDU
+    + Provider Selector now displays the new KDU v1.5.0 provider metadata: Advisory, Image Size, File Hash (SHA1), Authenticode Hash (SHA1), Page Hash (SHA1), and Page Hash (SHA256)
+    + Provider parsing was rewritten to handle the v1.5.0 list format, including provider names that contain extra commas and CVE IDs
+    + KDU self-extraction now compares on-disk file lengths against the embedded resources, forcing re-extraction when bundled KDU binaries change
++ UI / robustness improvements
+    + Process list, module list, kernel driver list, and provider list now auto-size columns to fit both the header text and the longest subitem (`Width = -2`), and re-apply the fit on every refresh
+    + `ProcessListView` compensates for its bold custom-drawn column header font by enforcing a minimum width on the "Image Size" and "Image Type" columns
+    + `ProviderSelector` tolerates non-contiguous provider IDs and malformed provider blocks by resolving the row from `SubItems[0]` instead of using the provider index as a positional ListView index, and by recording unparsable blocks with `ProviderIndex = -1` rather than throwing
+    + `KduWrapper.populateProviders` now splits on `Provider #` tokens only when they appear at the start of a line, preventing provider descriptions that contain the phrase from being chopped up
++ Kernel driver additions
+    + New IOCTL dispatch for `IO_GET_KERNEL_DRIVERS` and `IO_DUMP_KERNEL_MODULE` in `Driver.c`
+    + `ProcessLister.c` continues to walk PEB / WoW64 PEB32 LDR lists with `SanitizeUserPointer` validation at every step, and adds a 10 MB sanity cap on the module buffer size
+    + `Utility.c` exposes `DriverSleep` and `SanitizeUserPointer`
++ Project version bumped to 1.4.0
+
 ## Whats new v1.3.5
 + Updated KDU to v1.5.0 from v1.4.4 - 10 new Providers! 
     + Provider Selector now displays the new KDU v1.5.0 provider metadata: Advisory, Image Size, File Hash (SHA1), Authenticode Hash (SHA1), Page Hash (SHA1), and Page Hash (SHA256)
     + Improved KDU provider parsing to handle the v1.5.0 provider list format, including provider names that contain extra commas/CVE IDs
     + KDU self-extraction now compares embedded binary lengths against the on-disk files, forcing re-extraction when bundled KDU binaries are updated
-+ Added module enumeration and module dumping
-    + New "View Modules" context-menu option on the process list
-    + Added new ModuleForm window for browsing loaded modules of a target process
-    + View loaded modules for a target process (name, base address, size, path)
-    + Dump a selected module to a DLL/EXE file via the kernel driver
-    + Module enumeration is supported by the driver, including WoW64 processes
++ Added module enumeration and module dumping (updated for .NET 10)
+    + New "View Modules" context menu entry on the process list opens `ModuleForm`
+    + Module enumeration walks PEB/LDR for both 64-bit and WoW64 processes through the existing `IO_GET_PROCESS_MODULES` IOCTL
+    + A selected module can be dumped to a DLL/EXE using the standard `ProcessDumper` pipeline by synthesizing a `ProcessSummary` from the module info
+    + `ProcessSummary`'s constructor is public to allow the synthetic module dump path
 + Added IAT reconstruction / import table rebuilding
-    + The dumper now enumerates loaded modules and scans for import pointers
-    + A new .idata section is synthesized with reconstructed import descriptors, lookup tables, hint/name entries, and IAT
-    + Import directory and IAT data directories are updated so dumped executables can resolve imports more reliably
+    + `IATReconstructor` scans readable sections of the dumped image for pointers that resolve into a loaded module, resolves each pointer to an exported symbol name by parsing the corresponding DLL on disk, and synthesizes a brand-new `.idata` section containing a fresh Import Directory Table, Import Lookup Table, Hint/Name entries, and an IAT
+    + The synthesized `.idata` section is appended via the new `PEFile.GetNextSectionRva()` / `AddSection()` / `SetDataDirectory()` API, and the IMPORT (1) and IAT (12) data directories are rewritten so the resulting executable can resolve imports more reliably
+    + If module enumeration fails, the dump is still produced but may require manual import repair
 + Added kernel driver support for module enumeration
     + New IOCTL: IO_GET_PROCESS_MODULES
     + Kernel module info structure and user-mode bridge structures added
@@ -136,7 +170,7 @@ Anything is super helpful! Anything donated helps me keep developing this progra
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/mastercodeon31415/KsDumper-11/blob/main/LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/codeon314/KsDumper-11/blob/main/LICENSE) file for details. 
 
 ## References
 - https://github.com/EquiFox/KsDumper
@@ -148,6 +182,10 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 - https://www.unknowncheats.me/
 
 ## Compile Yourself
-- Requires Visual Studio 2022 (must use 2019 for compiling the driver, and 2019 wdk)
-- Requires .NET 4.8
-- Window Driver Framework (WDK)
+- Requires **Visual Studio 2026** (the .NET 10 WinForms designer and SDK are required for the user-mode application)
+- Requires the **.NET 10 SDK**
+- Requires the **.NET 10 Desktop Runtime** to run the compiled application
+- Open `KsDumper11.sln` at the repository root; the solution contains:
+    - `KsDumper11` — the .NET 10 WinForms user-mode application
+    - `DriverInterface` — the .NET 10 driver interface library
+    - `KsDumperDriver` — the kernel driver (VS 2019 / 2019 WDK)

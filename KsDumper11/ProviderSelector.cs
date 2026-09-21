@@ -1,4 +1,3 @@
-using DarkControls;
 using KsDumper11.Driver;
 using Newtonsoft.Json;
 using System;
@@ -12,8 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace KsDumper11
 {
@@ -23,9 +20,8 @@ namespace KsDumper11
         {
             get
             {
-                // Activate double buffering at the form level.  All child controls will be double buffered as well.
                 CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
                 return cp;
             }
         }
@@ -33,7 +29,6 @@ namespace KsDumper11
         KduWrapper wrapper;
 
         JsonSettingsManager settingsManager;
-        LabelDrawer labelDrawer;
 
         public ProviderSelector()
         {
@@ -41,38 +36,13 @@ namespace KsDumper11
 
             settingsManager = new JsonSettingsManager();
 
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.Region = Region.FromHrgn(Utils.CreateRoundRectRgn(0, 0, Width, Height, 10, 10));
-            this.closeBtn.Region = Region.FromHrgn(Utils.CreateRoundRectRgn(0, 0, closeBtn.Width, closeBtn.Height, 10, 10));
-
-            this.appIcon1.DragForm = this;
-
             KduSelfExtract.Extract();
 
             wrapper = new KduWrapper(KduSelfExtract.KduPath);
             wrapper.DriverLoaded += Wrapper_DriverLoaded;
             wrapper.ProvidersLoaded += Wrapper_ProvidersLoaded;
-            //wrapper.IsDirtyChanged += Wrapper_IsDirtyChanged;
 
             wrapper.LoadProviders();
-        }
-
-        private void setdriverLoadedLblVisible(bool visible)
-        {
-            for (int i = 0; i < labelDrawer.labelInfos.Length; i++)
-            {
-                if (labelDrawer.labelInfos[i].Name == "driverLoadedLbl")
-                {
-                    labelDrawer.labelInfos[i].Visible = visible;
-                }
-            }
-
-            this.Invalidate();
-        }
-
-        private void Wrapper_IsDirtyChanged(object sender, EventArgs e)
-        {
-            
         }
 
         private void Wrapper_ProvidersLoaded(object sender, EventArgs e)
@@ -103,6 +73,16 @@ namespace KsDumper11
             {
                 providerList.SelectedIndices.Add(0);
             }
+
+            // Auto-size every column so the header text and the widest subitem
+            // are always fully visible (nothing gets truncated with an ellipsis).
+            // Width = -2 sizes each column to fit its header and longest
+            // subitem. Re-applied here so widths stay fitted whenever the
+            // provider list is (re)populated.
+            for (int i = 0; i < providerList.Columns.Count; i++)
+            {
+                providerList.Columns[i].Width = -2;
+            }
         }
 
         private void Wrapper_DriverLoaded(object sender, object[] e)
@@ -114,31 +94,15 @@ namespace KsDumper11
             else
             {
                 bool res = (bool)e[0];
-
                 int providerIndex = (int)e[1];
 
-                // Do NOT use the provider index as a positional ListView index.
-                // KDU can emit non-contiguous IDs, and a malformed provider block
-                // (which KduProvider now records with ProviderIndex = -1 instead of
-                // throwing) would otherwise cause providerList.Items[providerIndex]
-                // to throw ArgumentOutOfRangeException.
-                //
-                // Instead, locate the ListViewItem whose SubItems[0] equals the
-                // ProviderIndex we were given. SubItems[0] is populated from
-                // p.ProviderIndex in Wrapper_ProvidersLoaded, so this mapping is
-                // stable regardless of gaps or parse failures.
                 int idx = -1;
                 ListViewItem item = null;
 
                 for (int i = 0; i < providerList.Items.Count; i++)
                 {
                     ListViewItem candidate = providerList.Items[i];
-
-                    if (candidate.SubItems.Count == 0)
-                    {
-                        continue;
-                    }
-
+                    if (candidate.SubItems.Count == 0) continue;
                     if (candidate.SubItems[0].Text == providerIndex.ToString())
                     {
                         idx = i;
@@ -147,13 +111,7 @@ namespace KsDumper11
                     }
                 }
 
-                if (item == null)
-                {
-                    // No row corresponds to this provider index (e.g. the provider
-                    // block failed to parse and therefore was never added). Nothing
-                    // to update visually; bail out safely.
-                    return;
-                }
+                if (item == null) return;
 
                 for (int i = 0; i < wrapper.providers.Count; i++)
                 {
@@ -165,23 +123,13 @@ namespace KsDumper11
                         if (res)
                         {
                             wrapper.providers[i].ProviderName = W_ + wrapper.providers[i].ProviderName;
-
-                            if (wrapper.IsDirty == false)
-                            {
-                                wrapper.IsDirty = true;
-                            }
+                            if (wrapper.IsDirty == false) wrapper.IsDirty = true;
                         }
                         else
                         {
                             wrapper.providers[i].ProviderName = non_W + wrapper.providers[i].ProviderName;
-
-                            if (wrapper.IsDirty == false)
-                            {
-                                wrapper.IsDirty = true;
-                            }
+                            if (wrapper.IsDirty == false) wrapper.IsDirty = true;
                         }
-
-                        
                         break;
                     }
                 }
@@ -215,14 +163,15 @@ namespace KsDumper11
                     item.ForeColor = Color.Red;
                 }
 
-                if (settingsManager.JsonSettings.enableAntiAntiDebuggerTools)
+                // Provider Name string may have grown (e.g. "[WORKING] " or
+                // "[NOT WORKING] " prefix added) - re-fit columns so the new
+                // longer text is not truncated.
+                for (int i = 0; i < providerList.Columns.Count; i++)
                 {
-                    setdriverLoadedLblVisible(true);
+                    providerList.Columns[i].Width = -2;
                 }
-                else
-                {
-                    driverLoadedLbl.Visible = true;
-                }
+
+                driverLoadedLbl.Visible = true;
                 driverLoadedLblTimer.Start();
             }
         }
@@ -230,8 +179,6 @@ namespace KsDumper11
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            if (m.Msg == Utils.WM_NCHITTEST)
-                m.Result = (IntPtr)(Utils.HT_CAPTION);
         }
 
         private void providerList_SelectedIndexChanged(object sender, EventArgs e)
@@ -245,7 +192,6 @@ namespace KsDumper11
                 if (p.ProviderName.Contains("[NOT WORKING]") || p.ProviderName.Contains("[WORKING]"))
                 {
                     testProviderBtn.Enabled = false;
-
                 }
                 else
                 {
@@ -273,14 +219,12 @@ namespace KsDumper11
                 driverWhqlSignedBox.Checked = p.IsWHQL_Signed;
                 shellcodeMaskBox.Text = p.ShellcodeSupportMask;
 
-                // --- KDU v1.5.0 fields ---
                 advisoryBox.Text = p.Advisory;
                 imageSizeBox.Text = p.ImageSize;
                 fileHashBox.Text = p.FileHashSHA1;
                 authHashBox.Text = p.AuthenticodeHashSHA1;
                 pageHashSha1Box.Text = p.PageHashSHA1;
                 pageHashSha256Box.Text = p.PageHashSHA256;
-                // ------------------------
 
                 defaultProviderIDBox.Text = wrapper.DefaultProvider.ToString();
 
@@ -313,15 +257,8 @@ namespace KsDumper11
         {
             testProviderBtn.Enabled = true;
 
-            if (settingsManager.JsonSettings.enableAntiAntiDebuggerTools)
-            {
-                setdriverLoadedLblVisible(false);
-            }
-            else
-            {
-                driverLoadedLbl.Visible = false;
-            }
-                
+            driverLoadedLbl.Visible = false;
+
             driverLoadedLblTimer.Stop();
         }
 
@@ -362,24 +299,18 @@ namespace KsDumper11
 
             if (settingsManager.JsonSettings.enableAntiAntiDebuggerTools)
             {
-                labelDrawer = new LabelDrawer(this);
-                setdriverLoadedLblVisible(false);
-
                 SnifferBypass.SelfTitle(this.Handle);
-
-                foreach (Control ctrl in this.Controls)
-                {
-                    if (ctrl is System.Windows.Forms.TextBox) continue;
-                    SnifferBypass.SelfTitle(ctrl.Handle);
-                }
-
                 this.Text = SnifferBypass.GenerateRandomString(this.Text.Length);
             }
+
+            providerFormFix.Start();
         }
 
-        private void closeBtn_Click(object sender, EventArgs e)
+        private void providerFormFix_Tick(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            this.Size = new Size(this.Size.Width + 3, this.Size.Height);
+            this.Invalidate();
+            providerFormFix.Stop();
         }
     }
 }

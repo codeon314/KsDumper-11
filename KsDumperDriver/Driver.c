@@ -1,6 +1,7 @@
 #include "NTUndocumented.h"
 #include "ProcessLister.h"
 #include "UserModeBridge.h"
+#include "KernelModuleLister.h"
 #include <wdf.h>
 
 DRIVER_INITIALIZE DriverEntry;
@@ -105,6 +106,45 @@ NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 			status = GetProcessModules(request->targetProcessId, request->bufferAddress, request->bufferSize, &request->moduleCount);
 
 			bytesIO = sizeof(KERNEL_GET_MODULES_OPERATION);
+		}
+		else
+		{
+			status = STATUS_INFO_LENGTH_MISMATCH;
+			bytesIO = 0;
+		}
+	}
+	else if (controlCode == IO_GET_KERNEL_DRIVERS)
+	{
+		if (stack->Parameters.DeviceIoControl.InputBufferLength == sizeof(KERNEL_GET_DRIVERS_OPERATION))
+		{
+			PKERNEL_GET_DRIVERS_OPERATION request = (PKERNEL_GET_DRIVERS_OPERATION)Irp->AssociatedIrp.SystemBuffer;
+
+			status = GetKernelModules(
+				request->bufferAddress,
+				request->bufferSize,
+				&request->moduleCount);
+
+			bytesIO = sizeof(KERNEL_GET_DRIVERS_OPERATION);
+		}
+		else
+		{
+			status = STATUS_INFO_LENGTH_MISMATCH;
+			bytesIO = 0;
+		}
+	}
+	else if (controlCode == IO_DUMP_KERNEL_MODULE)
+	{
+		if (stack->Parameters.DeviceIoControl.InputBufferLength == sizeof(KERNEL_DUMP_DRIVER_OPERATION))
+		{
+			PKERNEL_DUMP_DRIVER_OPERATION request = (PKERNEL_DUMP_DRIVER_OPERATION)Irp->AssociatedIrp.SystemBuffer;
+
+			status = DumpKernelDriver(
+				request->baseAddress,
+				request->bufferAddress,
+				request->bufferSize,
+				&request->bytesRead);
+
+			bytesIO = sizeof(KERNEL_DUMP_DRIVER_OPERATION);
 		}
 		else
 		{
