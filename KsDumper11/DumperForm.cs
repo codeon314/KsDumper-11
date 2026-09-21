@@ -80,6 +80,11 @@ namespace KsDumper11
             this.driver = new KsDumperDriverInterface("\\\\.\\KsDumper");
             this.dumper = new ProcessDumper(this.driver);
 
+            // Show the provider that KDU is using to map KsDumperDriver.sys.
+            // Read it straight from Providers.json so this status line always
+            // matches what KduWrapper actually passes to `kdu.exe -prv`.
+            UpdateProviderInfo();
+
             this.LoadProcessList();
         }
 
@@ -93,7 +98,6 @@ namespace KsDumper11
 
             Logger.OnLog += this.Logger_OnLog;
             Logger.Log("KsDumper 11 - [By EquiFox] Given Newlife", Array.Empty<object>());
-
 
             FormFixTimer.Start();
         }
@@ -168,6 +172,57 @@ namespace KsDumper11
                 {
                     MessageBox.Show("Unable to retrieve process list !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 }
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // UpdateProviderInfo
+        //
+        // Reads Providers.json (the same file KduWrapper writes and reads)
+        // and updates providerInfoLbl to show the currently selected default
+        // provider. The "-prv" argument that KduWrapper passes to kdu.exe is
+        // the DefaultProvider index into the Providers list, so we display
+        // both the human-readable provider name and that same numeric ID.
+        // -----------------------------------------------------------------
+        private void UpdateProviderInfo()
+        {
+            try
+            {
+                string providersPath = Path.Combine(KduSelfExtract.AssemblyDirectory, "Providers.json");
+
+                if (!File.Exists(providersPath))
+                {
+                    providerInfoLbl.Text = "Current Provider: Not configured";
+                    return;
+                }
+
+                KduProviderSettings settings =
+                    Newtonsoft.Json.JsonConvert.DeserializeObject<KduProviderSettings>(
+                        File.ReadAllText(providersPath));
+
+                if (settings == null
+                    || settings.Providers == null
+                    || settings.DefaultProvider < 0
+                    || settings.DefaultProvider >= settings.Providers.Count)
+                {
+                    providerInfoLbl.Text = "Current Provider: None selected";
+                    return;
+                }
+
+                KduProvider provider = settings.Providers[settings.DefaultProvider];
+
+                string name = provider.ProviderName ?? "(unknown)";
+                name = name.Replace("[WORKING] ", string.Empty)
+                           .Replace("[NOT WORKING] ", string.Empty);
+
+                providerInfoLbl.Text = string.Format(
+                    "Current Provider: {0} (ID #{1})",
+                    name,
+                    provider.ProviderIndex);
+            }
+            catch
+            {
+                providerInfoLbl.Text = "Current Provider: (unknown)";
             }
         }
 
@@ -511,6 +566,10 @@ namespace KsDumper11
             prov.ShowDialog();
 
             StartDriver.Start();
+
+            // Provider selection may have changed while the dialog was open,
+            // so refresh the status line to reflect the new default provider.
+            UpdateProviderInfo();
         }
 
         private void kernelModulesBtn_Click(object sender, EventArgs e)
