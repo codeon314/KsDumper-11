@@ -18,6 +18,12 @@ https://github.com/user-attachments/assets/7558d492-859a-429b-b51e-285cae623c91
 **Without these changes, KDU will fail to load the vulnerable drivers (all providers will fail), and KsDumper-11 will not be able to start its kernel driver.**
 
 ## Whats new v1.4.0
+
+<img width="2282" height="1278" alt="image" src="https://github.com/user-attachments/assets/a78cfab8-e1a6-46d6-8dc9-4e44ef70bf69" />
+<img width="1304" height="1195" alt="image" src="https://github.com/user-attachments/assets/ad8314cb-5290-4628-bab5-dec275520317" />
+<img width="1363" height="997" alt="image" src="https://github.com/user-attachments/assets/4bff7501-1c13-45c1-bb8d-6e9791425bb6" />
+<img width="1304" height="1195" alt="image" src="https://github.com/user-attachments/assets/634cd9f6-e485-4933-ba2d-d83c871597dd" />
+
 + Migrated the entire user-mode stack to .NET 10
     + User-mode application and driver interface now target `net10.0-windows` / .NET 10 (`KsDumper11`, `DriverInterface`)
     + The legacy DarkControls library and the Panel-based custom title bar were dropped in favor of native Windows Forms dark mode (`Application.SetColorMode(SystemColorMode.Dark)`), `ApplicationConfiguration.Initialize()`, and PerMonitorV2 high-DPI (`Application.SetHighDpiMode(HighDpiMode.PerMonitorV2)`)
