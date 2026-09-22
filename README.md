@@ -18,7 +18,7 @@
 
 ## Whats new v1.4.0
 
-<img width="2282" height="1278" alt="image" src="https://github.com/user-attachments/assets/a78cfab8-e1a6-46d6-8dc9-4e44ef70bf69" />
+<img width="1141" height="639" alt="image" src="https://github.com/user-attachments/assets/4ab9727c-c7d3-4fe7-8179-1879e8e9ab16" />
 <img width="1304" height="1195" alt="image" src="https://github.com/user-attachments/assets/ad8314cb-5290-4628-bab5-dec275520317" />
 <img width="1363" height="997" alt="image" src="https://github.com/user-attachments/assets/4bff7501-1c13-45c1-bb8d-6e9791425bb6" />
 <img width="1304" height="1195" alt="image" src="https://github.com/user-attachments/assets/634cd9f6-e485-4933-ba2d-d83c871597dd" />
